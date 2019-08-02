@@ -28,4 +28,5 @@ def blogs_with_type(request, blog_type_pk):
         raise(Http404(), 'blog_type not exist!')
     context['blogs'] = Blog.objects.filter(blog_type=blog_type)
     context['blog_type'] = blog_type
+    context['blog_types'] = BlogType.objects.all()
     return render(request, 'blog_with_type.html', context=context)
