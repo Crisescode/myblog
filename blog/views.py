@@ -8,10 +8,11 @@ from .models import Blog, BlogType
 def blog_list(request):
     page_num = request.GET.get('page', 1) # 获取页码参数，get请求
     blogs_list = Blog.objects.all()
-    paginator = Paginator(blogs_list, 10)
+    paginator = Paginator(blogs_list, 5)
     page_content = paginator.get_page(page_num)
 
     context = {}
+    context['blogs'] = page_content.object_list
     context['page_content'] = page_content
     context['blog_count'] = Blog.objects.all().count()
     context['blog_types'] = BlogType.objects.all()
