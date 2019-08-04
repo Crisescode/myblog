@@ -53,11 +53,15 @@
                             {% endif %}
                         </li>
                         {# 全部页面 #}
-                        {% for page_num in page_content.paginator.page_range %}
+                        {% for page_num in page_range %}
                             {% if page_num == page_content.number %}
                                 <li class="active"><span>{{ page_num }}</span></li>
                             {% else %}
-                                <li><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                                {% if page_num == '...' %}
+                                    <li><span>{{ page_num }}</span></li>
+                                {% else %}
+                                    <li><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
                         {# 下一页 #}
