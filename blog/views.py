@@ -84,6 +84,9 @@ def blog_detail(request, blog_pk):
     try:
         context = {}
         blog = Blog.objects.get(pk=blog_pk)
+        blog.readed_num += 1
+        blog.save()
+
         current_blog_create_time = blog.create_time
         context['blog'] = blog
         context['previous_blog'] = Blog.objects.\
