@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count
 from django.conf import settings
 from .models import Blog, BlogType
+from datetime import datetime
 
 
 def common_params(request, blogs_list):
@@ -84,8 +85,9 @@ def blog_detail(request, blog_pk):
     try:
         context = {}
         blog = Blog.objects.get(pk=blog_pk)
-        blog.readed_num += 1
-        blog.save()
+        if not request.COOKIES.get('blog_%s_readed' % blog_pk):
+            blog.readed_num += 1
+            blog.save()
 
         current_blog_create_time = blog.create_time
         context['blog'] = blog
@@ -93,6 +95,9 @@ def blog_detail(request, blog_pk):
             filter(create_time__gt=current_blog_create_time).last()
         context['next_blog'] = Blog.objects.\
             filter(create_time__lt=current_blog_create_time).first()
-        return render(request, "blog_detail.html", context=context)
+        response = render(request, "blog_detail.html", context=context) # 响应
+        response.set_cookie('blog_%s_readed' % blog_pk, 'true')
+
+        return response
     except Blog.DoesNotExist:
         raise(Http404, 'blog id {0} not exist!'.format(blog_pk))
