@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.db.models.fields import exceptions
 from ckeditor_uploader.fields import RichTextUploadingField
-
+from read_statistics.models import ReadNum
 
 class BlogType(models.Model):
     type_name = models.CharField(max_length=15)
@@ -19,13 +20,14 @@ class Blog(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
     last_update_time = models.DateTimeField(auto_now=True)
 
-    '''def get_read_num(self):
+    def get_read_num(self):
         try:
-            return self.readnum.read_num
+            ct = ContentType.objects.get_for_model(Blog)
+            read_num = ReadNum.objects.get(content_type=ct, object_id=self.pk)
+            return read_num
         except exceptions.ObjectDoesNotExist as e:
             print(e)
             return 0
-    '''
 
     def __str__(self):
         return "<blog {0}>".format(self.title)
@@ -33,11 +35,6 @@ class Blog(models.Model):
     class Meta:
         ordering = ['-create_time']
 
-
-'''class ReadNum(models.Model):
-    read_num = models.IntegerField(default=0)
-    blog = models.OneToOneField(Blog, on_delete=models.DO_NOTHING)
-'''
 
 
 
