@@ -19,12 +19,13 @@ class Blog(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
     last_update_time = models.DateTimeField(auto_now=True)
 
-    def get_read_num(self):
+    '''def get_read_num(self):
         try:
             return self.readnum.read_num
         except exceptions.ObjectDoesNotExist as e:
             print(e)
             return 0
+    '''
 
     def __str__(self):
         return "<blog {0}>".format(self.title)
@@ -33,9 +34,10 @@ class Blog(models.Model):
         ordering = ['-create_time']
 
 
-class ReadNum(models.Model):
+'''class ReadNum(models.Model):
     read_num = models.IntegerField(default=0)
     blog = models.OneToOneField(Blog, on_delete=models.DO_NOTHING)
+'''
 
 
 

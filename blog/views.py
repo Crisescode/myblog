@@ -3,7 +3,7 @@ from django.http import Http404
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.conf import settings
-from .models import Blog, BlogType, ReadNum
+from .models import Blog, BlogType
 
 
 def common_params(request, blogs_list):
@@ -85,13 +85,14 @@ def blog_detail(request, blog_pk):
         context = {}
         blog = Blog.objects.get(pk=blog_pk)
         if not request.COOKIES.get('blog_%s_readed' % blog_pk):
-            if ReadNum.objects.filter(blog=blog).count():
-                read = ReadNum.objects.get(blog=blog)
-            else:
-                read = ReadNum(blog=blog)
-
-            read.read_num += 1
-            read.save()
+            pass
+            # if ReadNum.objects.filter(blog=blog).count():
+            #     read = ReadNum.objects.get(blog=blog)
+            # else:
+            #     read = ReadNum(blog=blog)
+            #
+            # read.read_num += 1
+            # read.save()
 
         current_blog_create_time = blog.create_time
         context['blog'] = blog
