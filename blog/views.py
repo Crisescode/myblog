@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.http import Http404
 from django.core.paginator import Paginator
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count
 from django.conf import settings
+from read_statistics.models import ReadNum
 from .models import Blog, BlogType
 
 
@@ -85,14 +87,15 @@ def blog_detail(request, blog_pk):
         context = {}
         blog = Blog.objects.get(pk=blog_pk)
         if not request.COOKIES.get('blog_%s_readed' % blog_pk):
-            pass
-            # if ReadNum.objects.filter(blog=blog).count():
-            #     read = ReadNum.objects.get(blog=blog)
-            # else:
-            #     read = ReadNum(blog=blog)
-            #
-            # read.read_num += 1
-            # read.save()
+            ct = ContentType.objects.get_for_model(Blog)
+
+            if ReadNum.objects.filter(content_type=ct, object_id=blog.pk).count():
+                readn = ReadNum.objects.get(content_type=ct, object_id=blog.pk)
+            else:
+                readn = ReadNum(content_type=ct, object_id=blog.pk)
+
+            readn.read_num += 1
+            readn.save()
 
         current_blog_create_time = blog.create_time
         context['blog'] = blog

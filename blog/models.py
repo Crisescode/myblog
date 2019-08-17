@@ -23,8 +23,8 @@ class Blog(models.Model):
     def get_read_num(self):
         try:
             ct = ContentType.objects.get_for_model(Blog)
-            read_num = ReadNum.objects.get(content_type=ct, object_id=self.pk)
-            return read_num
+            readn = ReadNum.objects.get(content_type=ct, object_id=self.pk)
+            return readn.read_num
         except exceptions.ObjectDoesNotExist as e:
             print(e)
             return 0
