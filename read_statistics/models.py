@@ -1,6 +1,18 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.db.models.fields import exceptions
+
+
+class ReadNumExpandMethod(object):
+    def get_read_num(self):
+        try:
+            ct = ContentType.objects.get_for_model(self)
+            readn = ReadNum.objects.get(content_type=ct, object_id=self.pk)
+            return readn.read_num
+        except exceptions.ObjectDoesNotExist as e:
+            print(e)
+            return 0
 
 
 class ReadNum(models.Model):

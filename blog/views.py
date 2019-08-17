@@ -6,6 +6,7 @@ from django.db.models import Count
 from django.conf import settings
 from read_statistics.models import ReadNum
 from .models import Blog, BlogType
+from read_statistics.utils import read_statistics_once_read
 
 
 def common_params(request, blogs_list):
@@ -86,16 +87,7 @@ def blog_detail(request, blog_pk):
     try:
         context = {}
         blog = Blog.objects.get(pk=blog_pk)
-        if not request.COOKIES.get('blog_%s_readed' % blog_pk):
-            ct = ContentType.objects.get_for_model(Blog)
-
-            if ReadNum.objects.filter(content_type=ct, object_id=blog.pk).count():
-                readn = ReadNum.objects.get(content_type=ct, object_id=blog.pk)
-            else:
-                readn = ReadNum(content_type=ct, object_id=blog.pk)
-
-            readn.read_num += 1
-            readn.save()
+        read_cookie_key = read_statistics_once_read(request, blog)
 
         current_blog_create_time = blog.create_time
         context['blog'] = blog
@@ -104,7 +96,7 @@ def blog_detail(request, blog_pk):
         context['next_blog'] = Blog.objects.\
             filter(create_time__lt=current_blog_create_time).first()
         response = render(request, "blog_detail.html", context=context) # 响应
-        response.set_cookie('blog_%s_readed' % blog_pk, 'true')
+        response.set_cookie(read_cookie_key, 'true') # 阅读cookie标记
 
         return response
     except Blog.DoesNotExist:
