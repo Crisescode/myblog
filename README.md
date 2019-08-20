@@ -8,7 +8,7 @@ Personal blog site based on Django and bootstrap.
 * django-js-asset==1.2.2
 
 ## Main Features:
-*
+****
 
 ## Installation:
 *
