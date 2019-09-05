@@ -41,3 +41,7 @@ def get_seven_days_read_num(content_type):
         read_nums.append(result['read_num_sum'] or 0)
 
     return dates, read_nums
+
+
+def get_today_hot_data(content_type):
+    pass
