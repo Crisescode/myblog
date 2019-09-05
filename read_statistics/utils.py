@@ -44,4 +44,8 @@ def get_seven_days_read_num(content_type):
 
 
 def get_today_hot_data(content_type):
-    pass
+    today = timezone.now().date()
+    read_details = ReadDetail.objects.filter(content_type=content_type,
+                                             date=today).order_by('-read_num')
+
+    return read_details
